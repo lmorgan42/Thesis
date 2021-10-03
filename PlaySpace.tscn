@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Wall.png" type="Texture" id=1]
+[ext_resource path="res://Assets/g.png" type="Texture" id=2]
+[ext_resource path="res://PlaySpace.gd" type="Script" id=3]
+
+[node name="PlaySpace" type="Node"]
+script = ExtResource( 3 )
+
+[node name="RightWall" type="Sprite" parent="."]
+position = Vector2( 1054, 26 )
+scale = Vector2( 0.15, 4.3 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="LeftWall" type="Sprite" parent="."]
+position = Vector2( 528, 26 )
+scale = Vector2( 0.15, 4.3 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="Floor" type="Sprite" parent="."]
+position = Vector2( 528, 1048 )
+rotation = 4.71239
+scale = Vector2( 0.15, 2.25 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="Playspace" type="Sprite" parent="."]
+position = Vector2( 550, 25 )
+scale = Vector2( 500, 1000 )
+texture = ExtResource( 2 )
+centered = false
