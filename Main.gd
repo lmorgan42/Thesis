@@ -3,34 +3,42 @@ extends Node
 
 const NimoResource = preload("res://Nimo.tscn")
 const SuperNimoResource = preload("res://SuperNimo.tscn")
+const BlockMakerResource = preload("res://BlockMaker.tscn")
 
-var nimo
+var curNimo
+var holdNimo
+var nextNimos = []
+
 var superNimo
+var blockMaker
 
 func _ready():
-	createNimo([[0,1,0],[1,0,1]])
+	blockMaker = BlockMakerResource.instance()
+	self.add_child(blockMaker)
+	blockMaker.init()
+	createNimo(blockMaker.getNextNimo())
 	superNimo = SuperNimoResource.instance()
 	self.add_child(superNimo)
 	$Timer.start()
 
 func createNimo(nimoDesc):
-	nimo = NimoResource.instance()
-	nimo.init(self, $PlaySpace.getOrigin(), nimoDesc)
-	self.add_child(nimo)
+	curNimo = NimoResource.instance()
+	curNimo.init(self, $PlaySpace.getOrigin(), nimoDesc)
+	self.add_child(curNimo)
 
 func _input(event):
 	if event.is_action_pressed("move_block_right"):
-		nimo.move(1,0)
+		curNimo.move(1,0)
 	elif event.is_action_pressed("move_block_left"):
-		nimo.move(-1,0)
+		curNimo.move(-1,0)
 	elif event.is_action_pressed("rotate_block_clockwise"):
-		nimo.rotate(1)
+		curNimo.rotate(1)
 	elif event.is_action_pressed("rotate_block_counterclockwise"):
-		nimo.rotate(-1)
+		curNimo.rotate(-1)
 
 
 func _on_Timer_timeout():
-	if not nimo.move(0,1):
-		nimo.submitToSuperNimo()
-		nimo.queue_free()
-		createNimo([[0,1,0],[1,0,1]])
+	if not curNimo.move(0,1):
+		curNimo.submitToSuperNimo()
+		curNimo.queue_free()
+		createNimo(blockMaker.getNextNimo())
