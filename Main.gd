@@ -39,6 +39,22 @@ func _input(event):
 
 func _on_Timer_timeout():
 	if not curNimo.move(0,1):
-		curNimo.submitToSuperNimo()
-		curNimo.queue_free()
-		createNimo(blockMaker.getNextNimo())
+		checkClear()
+		
+func checkClear():
+	#add nimo to the super nimo
+	curNimo.submitToSuperNimo()
+	
+	#check every row and delete them all if cleared
+	for i in range(20):
+		var filled = true
+		for k in range(10):
+			if not superNimo.checkCollision(Vector2(k,i)):
+				filled = false
+				break
+		if filled:
+			print("deleting row " + str(i))
+			superNimo.deleteRow(i)
+	
+	curNimo.queue_free()
+	createNimo(blockMaker.getNextNimo())

@@ -45,7 +45,6 @@ func moveV(offset):
 		#collision check
 		block.move(offset)
 	return true
-#TODO add rotation function
 #TODO add another timer that activates when collisoin occurs that allows block to slide around until person stops pressing buttons
 func checkCollide(coords):
 	if coords.x > 9 or coords.x < 0 or coords.y > 19 or coords.y < 0:
