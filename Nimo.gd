@@ -26,7 +26,7 @@ func createBlocks():
 		for k in i:
 			if k == 1:
 				var block = BlockResource.instance()
-				block.init(playOrigin)
+				block.init(playOrigin, GM.getBlockLetters(1))
 				block.setBlockPosition(x,y)
 				add_child(block)
 				blocks.append(block)
@@ -91,6 +91,11 @@ func rotate(direction):
 	#now apply roation if no blocks collide
 	for block in blocks:
 		block.setBlockPositionV(proposedTranspose[block.coords])
+		
+func slamdown():
+	print("slamming down")
+	while move(0,1):
+		pass
 
 func submitToSuperNimo():
 	for block in blocks:

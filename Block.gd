@@ -6,8 +6,10 @@ var coords = Vector2(0,0)
 var playOrigin
 var BlockSize = 0
 
-func init(playOrigin : Vector2):
+func init(playOrigin : Vector2, letter):
 	self.playOrigin = playOrigin
+	self.letter = letter
+	$Label.text = self.letter
 	self.BlockSize = self.texture.get_size().x
 
 func setBlockPosition(x, y):
