@@ -8,6 +8,7 @@ const BlockMakerResource = preload("res://BlockMaker.tscn")
 const MIN_WORD_LEN = 3
 
 var curNimo
+var ghostNimo
 var holdNimo
 var nextNimos = []
 var rng = RandomNumberGenerator.new()
@@ -24,17 +25,13 @@ func _ready():
 	for word in words:
 		validWords[word] = null
 	
-	var word = "TSTACP"
-	var sub = checkForWords(word)
-	print(word.substr(sub.x, sub.y))
-	
 	rng.randomize()
 	blockMaker = BlockMakerResource.instance()
 	self.add_child(blockMaker)
 	blockMaker.init()
-	createNimo(blockMaker.getNextNimo())
 	superNimo = SuperNimoResource.instance()
 	self.add_child(superNimo)
+	createNimo(blockMaker.getNextNimo())
 	$Timer.start()
 	
 
@@ -42,16 +39,26 @@ func createNimo(nimoDesc):
 	curNimo = NimoResource.instance()
 	curNimo.init(self, $PlaySpace.getOrigin(), nimoDesc)
 	self.add_child(curNimo)
+	
+	ghostNimo = NimoResource.instance()
+	ghostNimo.init(self, $PlaySpace.getOrigin(), nimoDesc)
+	ghostNimo.enableGhostMode(curNimo)
+	self.add_child(ghostNimo)
+	ghostNimo.updateGhostPosition(curNimo)
 
 func _input(event):
 	if event.is_action_pressed("move_block_right"):
 		curNimo.move(1,0)
+		ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("move_block_left"):
 		curNimo.move(-1,0)
+		ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("rotate_block_clockwise"):
 		curNimo.rotate(1)
+		ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("rotate_block_counterclockwise"):
 		curNimo.rotate(-1)
+		ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("slam_down"):
 		curNimo.slamdown()
 		$Timer.stop()
@@ -64,10 +71,12 @@ func _on_Timer_timeout():
 		checkClear()
 		
 func checkClear():
+	#clear ghost nimo
+	ghostNimo.deleteBlocks()
+	ghostNimo.queue_free()
 	#add nimo to the super nimo
 	curNimo.submitToSuperNimo()
 	
-	#TODO create new clear that checks words
 	#figure out which rows and columns should be checked
 	var rows = []
 	var cols = []

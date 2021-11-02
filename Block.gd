@@ -5,6 +5,7 @@ var letter = ""
 var coords = Vector2(0,0)
 var playOrigin
 var BlockSize = 0
+var ghostMode = false
 
 func init(playOrigin : Vector2, letter):
 	self.playOrigin = playOrigin
@@ -30,3 +31,7 @@ func _setPosition():
 	transform.origin.x = int(playOrigin.x + (coords.x * self.BlockSize))
 	transform.origin.y = int(playOrigin.y + (coords.y * self.BlockSize))
 	#print("transform origin: " + str(transform.origin.x) + ", " + str(transform.origin.y))
+
+func enableGhostMode():
+	ghostMode = true
+	$Label.text = self.letter

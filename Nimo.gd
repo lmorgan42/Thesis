@@ -8,7 +8,7 @@ var origin = Vector2(0,0)
 var playOrigin : Vector2
 var nimoDesc
 var blocks = []
-
+var ghostMode = false
 
 func init(GM, playOrigin : Vector2, nimoDesc):
 	self.GM = GM
@@ -93,11 +93,25 @@ func rotate(direction):
 		block.setBlockPositionV(proposedTranspose[block.coords])
 		
 func slamdown():
-	print("slamming down")
 	while move(0,1):
 		pass
+
+func enableGhostMode(parentNimo):
+	ghostMode = true
+	for i in range(len(blocks)):
+		blocks[i].letter = parentNimo.blocks[i].letter
+		blocks[i].enableGhostMode()
+		
+func updateGhostPosition(parentNimo):
+	for i in range(len(blocks)):
+		blocks[i].setBlockPositionV(parentNimo.blocks[i].coords)
+	slamdown()
 
 func submitToSuperNimo():
 	for block in blocks:
 		remove_child(block)
 		self.GM.superNimo.addBlock(block)
+
+func deleteBlocks():
+	for block in blocks:
+		remove_child(block)
