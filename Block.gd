@@ -35,3 +35,4 @@ func _setPosition():
 func enableGhostMode():
 	ghostMode = true
 	$Label.text = self.letter
+	self.modulate.a = 0.4

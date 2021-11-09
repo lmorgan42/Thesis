@@ -27,7 +27,14 @@ texture = ExtResource( 1 )
 centered = false
 
 [node name="Playspace" type="Sprite" parent="."]
+visible = false
 position = Vector2( 550, 25 )
 scale = Vector2( 500, 1000 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="ScoreBackground" type="Sprite" parent="."]
+position = Vector2( 550, 1025 )
+scale = Vector2( 500, -1000 )
 texture = ExtResource( 2 )
 centered = false

@@ -5,3 +5,6 @@ func getOrigin():
 func getDimensions():
 	return $Playspace.scale
 	
+func setScorePercent(percent):
+	percent = min(1, percent)
+	$ScoreBackground.scale.y = -1000 * (percent)
