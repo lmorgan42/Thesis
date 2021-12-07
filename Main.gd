@@ -23,6 +23,7 @@ var blockMaker
 var pointValues = [[],['E','A','I','O','N','R','T','L','S','U'],['D','G'],['B','C','M','P'],['F','H','V','W','Y'],['K'],[],[],['J','X'],[],['Q','Z']]
 var score = 0
 var neededScore = 0
+var scoreAddition = 0.5;
 var scoreCapTime = 0.0
 var holdingTime = 5
 
@@ -85,6 +86,12 @@ func _input(event):
 		$DroppingTimer.wait_time = DefualtDropSpeed/2.0
 	elif event.is_action_released("fast_fall"):
 		$DroppingTimer.wait_time = DefualtDropSpeed
+	elif event.is_action_pressed("rotate_letters_left"):
+		curNimo.rotateLetters(-1)
+		ghostNimo.rotateLetters(-1)
+	elif event.is_action_pressed("rotate_letters_right"):
+		curNimo.rotateLetters(1)
+		ghostNimo.rotateLetters(1)
 
 
 func _on_Timer_timeout():
@@ -213,8 +220,7 @@ func calcWordScore(word):
 
 
 func _on_ScoreBuildupTimer_timeout():
-	scoreCapTime += 0.1
-	neededScore += pow((scoreCapTime/100),1.2)
+	neededScore += scoreAddition * ($ScoreBuildupTimer.wait_time/1.0)
 	recalcScoreTracker()
 
 func recalcScoreTracker():

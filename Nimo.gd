@@ -96,6 +96,24 @@ func slamdown():
 	while move(0,1):
 		pass
 
+func letterRotateSort(a, b):
+	if a.coords.y == b.coords.y:
+		return a.coords.x < b.coords.y
+	return a.coords.y > b.coords.y
+
+func rotateLetters(direc : int):
+	#direc -1 left, 1 is right
+	blocks.sort_custom(self, 'letterRotateSort')
+	var k = 0
+	var heldLet = ""
+	for i in range(len(blocks) + 1):
+		k = (k + direc)%len(blocks)
+		var tempLet = blocks[k].letter
+		blocks[k].letter = heldLet
+		heldLet = tempLet
+	for block in blocks:
+		block.updateLetter()
+
 func enableGhostMode(parentNimo):
 	ghostMode = true
 	for i in range(len(blocks)):

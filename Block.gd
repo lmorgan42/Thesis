@@ -36,3 +36,6 @@ func enableGhostMode():
 	ghostMode = true
 	$Label.text = self.letter
 	self.modulate.a = 0.4
+
+func updateLetter():
+	$Label.text = self.letter

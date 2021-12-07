@@ -21,7 +21,7 @@ font_data = ExtResource( 3 )
 
 [node name="Main" type="Node"]
 script = ExtResource( 2 )
-DefualtHoldSpeed = 5
+DefualtHoldSpeed = 30
 
 [node name="PlaySpace" parent="." instance=ExtResource( 1 )]
 
