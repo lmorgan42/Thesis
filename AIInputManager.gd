@@ -7,8 +7,8 @@ var inputting = false
 var stopOnEmpty = true
 var delay = true
 
-func init():
-	$"Random agent AI".init()
+func init(GameManager):
+	$"Lowest point AI".init(GameManager)
 
 func executeNext():
 	if commandQueue.empty(): return false

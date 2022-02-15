@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://PlaySpace.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Main.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Roboto-Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://AIInputManager.gd" type="Script" id=4]
 [ext_resource path="res://Random agent AI.gd" type="Script" id=5]
+[ext_resource path="res://Lowest point AI.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=3]
 size = 35
@@ -32,6 +33,9 @@ script = ExtResource( 4 )
 
 [node name="Random agent AI" type="Node" parent="AIInputManager"]
 script = ExtResource( 5 )
+
+[node name="Lowest point AI" type="Node" parent="AIInputManager"]
+script = ExtResource( 6 )
 
 [node name="ScoreLbl" type="Label" parent="."]
 margin_left = 1090.0
@@ -74,7 +78,7 @@ wait_time = 0.25
 autostart = true
 
 [connection signal="input_compelted" from="." to="AIInputManager" method="_on_Main_input_compelted"]
-[connection signal="finished" from="AIInputManager" to="AIInputManager/Random agent AI" method="_on_AIInputManager_finished"]
+[connection signal="finished" from="AIInputManager" to="AIInputManager/Lowest point AI" method="_on_AIInputManager_finished"]
 [connection signal="timeout" from="HoldingTimer" to="." method="_on_HoldingTimer_timeout"]
 [connection signal="timeout" from="DroppingTimer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="ScoreBuildupTimer" to="." method="_on_ScoreBuildupTimer_timeout"]

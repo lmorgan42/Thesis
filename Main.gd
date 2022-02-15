@@ -48,7 +48,7 @@ func _ready():
 	$PlaySpace.setScorePercent(0)
 	$DroppingTimer.wait_time = DefualtDropSpeed
 	createNimo(blockMaker.getNextNimo())
-	if aicontrolled: $AIInputManager.init()
+	if aicontrolled: $AIInputManager.init(self)
 	
 	#Testing code
 	$AIInputManager.addCommand("move_block_right")
