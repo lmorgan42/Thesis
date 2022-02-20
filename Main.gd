@@ -50,17 +50,6 @@ func _ready():
 	createNimo(blockMaker.getNextNimo())
 	if aicontrolled: $AIInputManager.init(self)
 	
-	#Testing code
-	$AIInputManager.addCommand("move_block_right")
-	$AIInputManager.addCommand("move_block_right")
-	$AIInputManager.addCommand("move_block_right")
-	$AIInputManager.addCommand("slam_down")
-	$AIInputManager.addCommand("move_block_right")
-	$AIInputManager.addCommand("move_block_right")
-	$AIInputManager.addCommand("move_block_right")
-	$AIInputManager.addCommand("slam_down")
-	$AIInputManager.start()
-	
 
 func createNimo(nimoDesc):
 	$DroppingTimer.stop()
@@ -130,59 +119,59 @@ func checkClear():
 	#add nimo to the super nimo
 	curNimo.submitToSuperNimo()
 	
-	#figure out which rows and columns should be checked
-	var rows = []
-	var cols = []
-	var toClearRows = []
-	for block in curNimo.blocks:
-		if not block.coords.x in cols: cols.append(block.coords.x)
-		if not block.coords.y in rows: rows.append(block.coords.y)
-	#check each consecutive chunk of blocks for words
-	#check rows
-	for row in rows:
-		var toCheck = ""
-		for i in range(10):
-			if superNimo.blocks[i][row] == null: toCheck += " "
-			else: toCheck += superNimo.blocks[i][row].letter
-		var subString = checkForWords(toCheck)
-		if subString.y != -1:
-			if not row in toClearRows: toClearRows.append(row)
-			var foundWord = ""
-			if subString.z == -1: foundWord = invertString(toCheck.substr(subString.x, subString.y))
-			else: foundWord = toCheck.substr(subString.x, subString.y)
-			$LastWord.text = "Last Word: " + foundWord
-			self.score += calcWordScore(foundWord)
-			updateScore()
-	#check columns
-	for col in cols:
-		var toCheck = ""
-		for i in range(20):
-			if superNimo.blocks[col][i] == null: toCheck += " "
-			else: toCheck += superNimo.blocks[col][i].letter
-		var subString = checkForWords(toCheck)
-		if subString.y != -1:
-			for i in range(subString.y):
-				if not subString.x + i in toClearRows: toClearRows.append(subString.x + i)
-			if subString.z == -1: $LastWord.text = ("Last Word: " + invertString(toCheck.substr(subString.x, subString.y)))
-			else: $LastWord.text = ("Last Word: " + toCheck.substr(subString.x, subString.y))
-		
-	#clear any rows that include words found
-	for row in toClearRows:
-		superNimo.deleteRow(row)
-	superNimo.dropRows()
+#	#figure out which rows and columns should be checked
+#	var rows = []
+#	var cols = []
+#	var toClearRows = []
+#	for block in curNimo.blocks:
+#		if not block.coords.x in cols: cols.append(block.coords.x)
+#		if not block.coords.y in rows: rows.append(block.coords.y)
+#	#check each consecutive chunk of blocks for words
+#	#check rows
+#	for row in rows:
+#		var toCheck = ""
+#		for i in range(10):
+#			if superNimo.blocks[i][row] == null: toCheck += " "
+#			else: toCheck += superNimo.blocks[i][row].letter
+#		var subString = checkForWords(toCheck)
+#		if subString.y != -1:
+#			if not row in toClearRows: toClearRows.append(row)
+#			var foundWord = ""
+#			if subString.z == -1: foundWord = invertString(toCheck.substr(subString.x, subString.y))
+#			else: foundWord = toCheck.substr(subString.x, subString.y)
+#			$LastWord.text = "Last Word: " + foundWord
+#			self.score += calcWordScore(foundWord)
+#			updateScore()
+#	#check columns
+#	for col in cols:
+#		var toCheck = ""
+#		for i in range(20):
+#			if superNimo.blocks[col][i] == null: toCheck += " "
+#			else: toCheck += superNimo.blocks[col][i].letter
+#		var subString = checkForWords(toCheck)
+#		if subString.y != -1:
+#			for i in range(subString.y):
+#				if not subString.x + i in toClearRows: toClearRows.append(subString.x + i)
+#			if subString.z == -1: $LastWord.text = ("Last Word: " + invertString(toCheck.substr(subString.x, subString.y)))
+#			else: $LastWord.text = ("Last Word: " + toCheck.substr(subString.x, subString.y))
+#
+#	#clear any rows that include words found
+#	for row in toClearRows:
+#		superNimo.deleteRow(row)
+#	superNimo.dropRows()
 	
 	
 	#check every row and delete them all if cleared
-#	for i in range(20):
-#		var filled = true
-#		for k in range(10):
-#			if not superNimo.checkCollision(Vector2(k,i)):
-#				filled = false
-#				break
-#		if filled:
-#			print("deleting row " + str(i))
-#			superNimo.deleteRow(i)
-#			superNimo.dropRows()
+	for i in range(20):
+		var filled = true
+		for k in range(10):
+			if not superNimo.checkCollision(Vector2(k,i)):
+				filled = false
+				break
+		if filled:
+			print("deleting row " + str(i))
+			superNimo.deleteRow(i)
+			superNimo.dropRows()
 
 	curNimo.queue_free()
 	createNimo(blockMaker.getNextNimo())

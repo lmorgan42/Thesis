@@ -33,7 +33,7 @@ func generateBlockBottom():
 	for coord in blocks:
 		if coord.x < lowestX: lowestX = coord.x
 		if coord.x > highestX: highestX = coord.x
-	#use the infor to prepare for movement and coord translation
+	#use the info to prepare for movement and coord translation
 	movementTracker = -1 * lowestX
 	for i in range(highestX - lowestX + 1):
 		blockBottom.append(0)
@@ -46,13 +46,13 @@ func checkLowestPoint():
 	#fill out highestPoints
 	highestPoints = []
 	for i in range(10):
-		var curHeight = 19
-		while GameManager.superNimo.checkCollision(Vector2(i,curHeight)):
-			curHeight -= 1
-			if curHeight < 0:
-				curHeight = 0
+		var curHeight = 0
+		while not GameManager.superNimo.checkCollision(Vector2(i,curHeight)):
+			curHeight += 1
+			if curHeight > 19:
+				curHeight = 20
 				break
-		highestPoints.append(curHeight)
+		highestPoints.append(curHeight - 1)
 	generateBlockBottom()
 	#find furthest down block could move in each position and save best
 	var leftXPos = 0
@@ -61,6 +61,7 @@ func checkLowestPoint():
 		var bestSubDistance = 20
 		for j in range(len(blockBottom)):
 			var distance = highestPoints[i + j] - blockBottom[j]
+			print("distance: " + str(distance))
 			if distance < bestSubDistance: bestSubDistance = distance
 		if bestSubDistance > bestDistance: 
 			bestDistance = bestSubDistance
