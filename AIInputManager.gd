@@ -2,6 +2,7 @@ extends Node
 
 signal finished
 
+
 var commandQueue = []
 var inputting = false
 var stopOnEmpty = true
