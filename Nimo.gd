@@ -98,7 +98,7 @@ func slamdown():
 
 func letterRotateSort(a, b):
 	if a.coords.y == b.coords.y:
-		return a.coords.x < b.coords.y
+		return a.coords.x > b.coords.x
 	return a.coords.y > b.coords.y
 
 func rotateLetters(direc : int):

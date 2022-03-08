@@ -185,15 +185,16 @@ func checkLowestPoint():
 
 func resolveMovement(boardIndex):
 	var board = potentialBoards[boardIndex]
-	for i in range(board.rotation):
-		get_parent().addCommand("rotate_block_clockwise")
-	for i in range(6):
-		get_parent().addCommand("move_block_left")
-	for i in range(board.position):
-		get_parent().addCommand("move_block_right")
-	get_parent().addCommand("slam_down")
+	get_parent().placeBlock(board.position, board.rotation)
+#	for i in range(board.rotation):
+#		get_parent().addCommand("rotate_block_clockwise")
+#	for i in range(6):
+#		get_parent().addCommand("move_block_left")
+#	for i in range(board.position):
+#		get_parent().addCommand("move_block_right")
+#	get_parent().addCommand("slam_down")
 	potentialBoards = []
-	get_parent().start()
+#	get_parent().start()
 
 
 func _on_AIInputManager_finished():

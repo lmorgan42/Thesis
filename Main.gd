@@ -28,7 +28,7 @@ var neededScore = 0
 var scoreAddition = 0.5;
 var scoreCapTime = 0.0
 var holdingTime = 5
-var aicontrolled = true
+var aicontrolled = false
 var blockInput = false
 
 func _ready():
@@ -162,6 +162,7 @@ func checkClear():
 	
 	
 	#check every row and delete them all if cleared
+	var clearedRows = []
 	for i in range(20):
 		var filled = true
 		for k in range(10):
@@ -169,13 +170,42 @@ func checkClear():
 				filled = false
 				break
 		if filled:
-			print("deleting row " + str(i))
-			superNimo.deleteRow(i)
-			superNimo.dropRows()
+#			superNimo.deleteRow(i)
+#			superNimo.dropRows()
+			clearedRows.append(i)
+	#look for words and score cleared rows
+	var tempScore = 0
+	var lastWords = []
+	var lastWordsLocations = []
+	for row in clearedRows:
+		var toCheck = ""
+		for i in range(10):
+			if superNimo.blocks[i][row] == null: toCheck += " "
+			else: toCheck += superNimo.blocks[i][row].letter
+		var subString = checkForWords(toCheck)
+		if subString.y != -1:
+			var foundWord = ""
+			if subString.z == -1: foundWord = invertString(toCheck.substr(subString.x, subString.y))
+			else: foundWord = toCheck.substr(subString.x, subString.y)
+			lastWords.append(foundWord)
+			lastWordsLocations.append(subString)
+			tempScore += calcWordScore(foundWord)
+	#update score and lastWords
+	self.score += len(clearedRows) * tempScore
+	updateScore()
+	var wordText = "Last Words: "
+	for word in lastWords:
+		wordText += word + "\n"
+	$LastWord.text = wordText
+	#clear rows
+	for row in clearedRows:
+		superNimo.deleteRow(row)
+	superNimo.dropRows()
 
 	curNimo.queue_free()
 	createNimo(blockMaker.getNextNimo())
 
+#TODO update function to find higest scoring word as oppose to first
 func checkForWords(toCheck):
 	var toRe = Vector3(0,-1, 1)
 	for i in range(len(toCheck), MIN_WORD_LEN - 1, -1):
