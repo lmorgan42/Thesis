@@ -32,7 +32,7 @@ var holdingTime = 5
 var aicontrolled = true
 var blockInput = false
 var runRandom = true
-var runTest = false
+var runTest = true
 var testRuns = 1000
 
 func _ready():
@@ -70,7 +70,7 @@ func resetGame():
 	$DroppingTimer.stop()
 	$HoldingTimer.stop()
 	$ScoreBuildupTimer.stop()
-	ghostNimo.kill()
+	if ghostNimo != null: ghostNimo.kill()
 	curNimo.kill()
 	$ScoreBuildupTimer.start()
 	createNimo(blockMaker.getNextNimo())
@@ -85,11 +85,12 @@ func createNimo(nimoDesc):
 		if superNimo.checkCollision(block.coords):
 			self.gameOver()
 	
-	ghostNimo = NimoResource.instance()
-	ghostNimo.init(self, $PlaySpace.getOrigin(), nimoDesc)
-	ghostNimo.enableGhostMode(curNimo)
-	self.add_child(ghostNimo)
-	ghostNimo.updateGhostPosition(curNimo)
+	if not runTest:
+		ghostNimo = NimoResource.instance()
+		ghostNimo.init(self, $PlaySpace.getOrigin(), nimoDesc)
+		ghostNimo.enableGhostMode(curNimo)
+		self.add_child(ghostNimo)
+		ghostNimo.updateGhostPosition(curNimo)
 	
 	holdingTime = DefualtHoldSpeed
 	$HoldingTimeLbl.text = str(holdingTime)
@@ -100,16 +101,16 @@ func _input(event):
 	var invalidInput = false
 	if event.is_action_pressed("move_block_right"):
 		curNimo.move(1,0)
-		ghostNimo.updateGhostPosition(curNimo)
+		if not runTest: ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("move_block_left"):
 		curNimo.move(-1,0)
-		ghostNimo.updateGhostPosition(curNimo)
+		if not runTest: ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("rotate_block_clockwise"):
 		curNimo.rotate(1)
-		ghostNimo.updateGhostPosition(curNimo)
+		if not runTest: ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("rotate_block_counterclockwise"):
 		curNimo.rotate(-1)
-		ghostNimo.updateGhostPosition(curNimo)
+		if not runTest: ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("slam_down"):
 		curNimo.slamdown()
 		$DroppingTimer.stop()
@@ -123,10 +124,10 @@ func _input(event):
 		$DroppingTimer.wait_time = DefualtDropSpeed
 	elif event.is_action_pressed("rotate_letters_left"):
 		curNimo.rotateLetters(-1)
-		ghostNimo.rotateLetters(-1)
+		if not runTest: ghostNimo.rotateLetters(-1)
 	elif event.is_action_pressed("rotate_letters_right"):
 		curNimo.rotateLetters(1)
-		ghostNimo.rotateLetters(1)
+		if not runTest: ghostNimo.rotateLetters(1)
 	else:
 		invalidInput = true
 	if not invalidInput:
@@ -140,7 +141,7 @@ func _on_Timer_timeout():
 func checkClear():
 	blocksPlaced += 1
 	#clear ghost nimo
-	ghostNimo.kill()
+	if not runTest: ghostNimo.kill()
 	#add nimo to the super nimo
 	curNimo.submitToSuperNimo()
 	
@@ -311,3 +312,5 @@ func gameOver():
 	$HoldingTimeLbl.text = "GAME OVER"
 	if runTest && $Tester.recordRun(score, blocksPlaced):
 		resetGame()
+	elif runTest:
+		get_tree().quit()

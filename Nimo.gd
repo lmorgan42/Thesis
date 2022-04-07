@@ -138,3 +138,4 @@ func kill():
 func deleteBlocks():
 	for block in blocks:
 		remove_child(block)
+

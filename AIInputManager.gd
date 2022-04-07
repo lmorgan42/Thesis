@@ -6,7 +6,7 @@ signal finished
 var commandQueue = []
 var inputting = false
 var stopOnEmpty = true
-var delay = true
+var delay = false
 var midPlacing = false
 var placingPosition = -1
 

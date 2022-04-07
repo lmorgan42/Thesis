@@ -143,8 +143,8 @@ func chooseBoard():
 		elif potentialBoards[i].holeCount == bestHoles and potentialBoards[i].highestPoint > bestHighest:
 			bestHighest = potentialBoards[i].highestPoint
 			chosen = i
-	print("----------------- Chosen -----------------")
-	print(potentialBoards[chosen].toString())
+	#print("----------------- Chosen -----------------")
+	#print(potentialBoards[chosen].toString())
 	return chosen
 
 func generateBlockBottom():
