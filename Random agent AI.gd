@@ -4,8 +4,10 @@ const Max_Moves = 8
 const Possible_Moves = ["move_block_right", "move_block_left", "rotate_block_clockwise", "rotate_block_counterclockwise"]
 
 var rng = RandomNumberGenerator.new()
+var running = false
 
-func init():
+func init(GM):
+	running = true
 	createMoveSequence()
 
 func createMoveSequence():
@@ -16,4 +18,5 @@ func createMoveSequence():
 	get_parent().start()
 
 func _on_AIInputManager_finished():
+	if not running: return
 	createMoveSequence()

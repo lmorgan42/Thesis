@@ -8,8 +8,10 @@ var blocks = []
 var blockBottom = []
 var potentialBoards = []
 var movementTracker = 0
+var running = false
 
 func init(GameManager):
+	running = true
 	self.GameManager = GameManager
 	solveForMove()
 
@@ -198,4 +200,5 @@ func resolveMovement(boardIndex):
 
 
 func _on_AIInputManager_finished():
+	if not running: return
 	solveForMove()

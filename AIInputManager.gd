@@ -28,10 +28,14 @@ func placeBlock(position, rotation):
 	print("placing block")
 	placingPosition = position
 	midPlacing = true
-	for i in range(rotation): self.addCommand("rotate_block_clockwise")
-	self.start()
+	if rotation > 0:
+		for i in range(rotation): self.addCommand("rotate_block_clockwise")
+		self.start()
+	else:
+		placeBlockFinish()
 
 func placeBlockFinish():
+	midPlacing = false
 	var neededMovement = placingPosition - getCurrentBlockLeftmost()
 	var moveString
 	if neededMovement < 0:
@@ -58,12 +62,11 @@ func start(stopOnEmpty = true):
 
 func _on_Main_input_compelted():
 	if self.inputting:
-		yield(get_tree().create_timer(0.2), "timeout")
+		if delay: yield(get_tree().create_timer(0.2), "timeout")
 		var full = executeNext()
 		if not full and self.stopOnEmpty:
 			self.inputting = false
 			if midPlacing:
-				midPlacing = false
 				placeBlockFinish()
 			else:
 				print("emitting finished")

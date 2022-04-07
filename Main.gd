@@ -28,7 +28,7 @@ var neededScore = 0
 var scoreAddition = 0.5;
 var scoreCapTime = 0.0
 var holdingTime = 5
-var aicontrolled = false
+var aicontrolled = true
 var blockInput = false
 
 func _ready():
@@ -38,6 +38,7 @@ func _ready():
 	var words = file.get_as_text().split("\n")
 	for word in words:
 		validWords[word] = null
+	$LetterDistributer.generateDistribution(validWords)
 	
 	rng.randomize()
 	blockMaker = BlockMakerResource.instance()
@@ -234,7 +235,7 @@ func invertString(toInvert):
 func getBlockLetters(num):
 	var toRe = ""
 	for i in range(num):
-		toRe += "%c" % rng.randi_range(65,90)
+		toRe += $LetterDistributer.getLetter(rng)
 	return toRe
 	
 
