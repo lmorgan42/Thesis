@@ -10,6 +10,13 @@ func _enter_tree():
 			temp.append(null)
 		blocks.append(temp)
 
+func reset():
+	for i in range(10):
+		for j in range(20):
+			if blocks[i][j] != null:
+				blocks[i][j].queue_free()
+				blocks[i][j] = null
+
 func addBlocks(blockArr):
 	for block in blockArr:
 		addBlock(block)
@@ -29,7 +36,7 @@ func deleteRow(row):
 			blocks[coords.x][coords.y] = null
 		
 func dropRows(startRow:int = 0):
-	print("dropping")
+	#print("dropping")
 	var blocksToMove = []
 	var x = 0
 	var y = startRow
@@ -40,7 +47,7 @@ func dropRows(startRow:int = 0):
 			x = 0
 			y += 1
 			if y == 20: return
-	print("first block row is: " + str(y))
+	#print("first block row is: " + str(y))
 	#find next empty row
 	var emptyRow = true
 	while true:
@@ -56,7 +63,7 @@ func dropRows(startRow:int = 0):
 			y += 1
 			if y == 20:
 				return
-	print("first empty row is: " + str(y))
+	#print("first empty row is: " + str(y))
 	#move all above blocks
 	for block in blocksToMove:
 		if blocks[block.coords.x][block.coords.y] == block:

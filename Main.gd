@@ -24,12 +24,16 @@ var blockMaker
 
 var pointValues = [[],['E','A','I','O','N','R','T','L','S','U'],['D','G'],['B','C','M','P'],['F','H','V','W','Y'],['K'],[],[],['J','X'],[],['Q','Z']]
 var score = 0
+var blocksPlaced = 0
 var neededScore = 0
 var scoreAddition = 0.5;
 var scoreCapTime = 0.0
 var holdingTime = 5
 var aicontrolled = true
 var blockInput = false
+var runRandom = true
+var runTest = false
+var testRuns = 1000
 
 func _ready():
 	
@@ -40,7 +44,11 @@ func _ready():
 		validWords[word] = null
 	$LetterDistributer.generateDistribution(validWords)
 	
-	rng.randomize()
+	if runTest: $Tester.init(testRuns)
+	
+	if runRandom:
+		randomize()
+		rng.randomize()
 	blockMaker = BlockMakerResource.instance()
 	self.add_child(blockMaker)
 	blockMaker.init()
@@ -50,7 +58,23 @@ func _ready():
 	$DroppingTimer.wait_time = DefualtDropSpeed
 	createNimo(blockMaker.getNextNimo())
 	if aicontrolled: $AIInputManager.init(self)
-	
+
+func resetGame():
+	print("resetting")
+	superNimo.reset()
+	score = 0
+	blocksPlaced = 0
+	updateScore()
+	neededScore = 0
+	blockInput = false
+	$DroppingTimer.stop()
+	$HoldingTimer.stop()
+	$ScoreBuildupTimer.stop()
+	ghostNimo.kill()
+	curNimo.kill()
+	$ScoreBuildupTimer.start()
+	createNimo(blockMaker.getNextNimo())
+	if aicontrolled: $AIInputManager.reset()
 
 func createNimo(nimoDesc):
 	$DroppingTimer.stop()
@@ -114,9 +138,9 @@ func _on_Timer_timeout():
 		checkClear()
 		
 func checkClear():
+	blocksPlaced += 1
 	#clear ghost nimo
-	ghostNimo.deleteBlocks()
-	ghostNimo.queue_free()
+	ghostNimo.kill()
 	#add nimo to the super nimo
 	curNimo.submitToSuperNimo()
 	
@@ -278,4 +302,12 @@ func gameOver():
 	$DroppingTimer.stop()
 	$HoldingTimer.stop()
 	$ScoreBuildupTimer.stop()
+#	$DroppingTimer.paused = true
+#	$HoldingTimer.paused = true
+#	$ScoreBuildupTimer.paused = true
+#	$DroppingTimer.queue_free()
+#	$HoldingTimer.queue_free()
+#	$ScoreBuildupTimer.queue_free()
 	$HoldingTimeLbl.text = "GAME OVER"
+	if runTest && $Tester.recordRun(score, blocksPlaced):
+		resetGame()

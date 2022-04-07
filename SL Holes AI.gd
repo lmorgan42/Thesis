@@ -19,7 +19,7 @@ func solveForMove():
 	getBlocks()
 	#checkLowestPoint()
 	generatePotentialBoards()
-	findHighestPointOnBoards()
+	generateHeightScore()
 	resolveMovement(chooseBoard())
 
 func getBlocks():
@@ -71,7 +71,7 @@ func generatePotentialBoards():
 				bState.append(temp)
 			#and add dropped nimo to it
 			for block in nimo:
-				bState[block.x][block.y] = 1
+				bState[block.x][block.y] = 2
 			#make new board state
 			var temp = boardStatePre.instance()
 			temp.init(j, i, bState)
@@ -111,18 +111,18 @@ func generatePotentialBoards():
 			newLoc += pivotPoint
 			nimoRef[k] = newLoc
 
-func findHighestPointOnBoards():
+func generateHeightScore():
 	for board in potentialBoards:
-		var highest = 0
-		var hitOne = false
+		var heightScore = 0
+		var holeCount = 0
 		for y in range(len(board.state[0])):
 			for x in range(len(board.state)):
-				if board.state[x][y] == 1: 
-					hitOne = true
-					break
-			if not hitOne: highest = y
-			else: break
-		board.highestPoint = highest
+				if board.state[x][y] == 2: 
+					heightScore += y
+					if y + 1 < 20:
+						if board.state[x][y + 1] == 0: holeCount += 1
+		board.highestPoint = heightScore
+		board.holeCount = holeCount
 		#print(board.toString())
 			
 func collisionCheckNimo(nimo):
@@ -134,12 +134,17 @@ func collisionCheckNimo(nimo):
 func chooseBoard():
 	var chosen = 0
 	var bestHighest = 0
+	var bestHoles = 10
 	for i in range(len(potentialBoards)):
-		if potentialBoards[i].highestPoint > bestHighest:
+		if potentialBoards[i].holeCount < bestHoles:
+			bestHoles = potentialBoards[i].holeCount
 			bestHighest = potentialBoards[i].highestPoint
 			chosen = i
-	#print("----------------- Chosen -----------------")
-	#print(potentialBoards[chosen].toString())
+		elif potentialBoards[i].holeCount == bestHoles and potentialBoards[i].highestPoint > bestHighest:
+			bestHighest = potentialBoards[i].highestPoint
+			chosen = i
+	print("----------------- Chosen -----------------")
+	print(potentialBoards[chosen].toString())
 	return chosen
 
 func generateBlockBottom():

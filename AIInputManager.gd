@@ -11,10 +11,20 @@ var midPlacing = false
 var placingPosition = -1
 
 func init(GameManager):
-	$"Lowest point AI".init(GameManager)
+	$"SL Holes AI".init(GameManager)
+
+func reset():
+	print(inputting)
+	if inputting:
+		inputting = false
+		commandQueue.clear()
+	midPlacing = false
+	emit_signal("finished")
 
 func executeNext():
-	if commandQueue.empty(): return false
+	if commandQueue.empty(): 
+		inputting = false
+		return false
 	var ev = InputEventAction.new()
 	ev.action = commandQueue.pop_front()
 	ev.pressed = true
@@ -25,7 +35,7 @@ func addCommand(command):
 	commandQueue.push_back(command)
 
 func placeBlock(position, rotation):
-	print("placing block")
+	#print("placing block")
 	placingPosition = position
 	midPlacing = true
 	if rotation > 0:
@@ -65,9 +75,8 @@ func _on_Main_input_compelted():
 		if delay: yield(get_tree().create_timer(0.2), "timeout")
 		var full = executeNext()
 		if not full and self.stopOnEmpty:
-			self.inputting = false
 			if midPlacing:
 				placeBlockFinish()
 			else:
-				print("emitting finished")
+				yield(get_tree(),"idle_frame")
 				emit_signal("finished")

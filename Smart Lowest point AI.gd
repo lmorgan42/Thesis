@@ -19,7 +19,7 @@ func solveForMove():
 	getBlocks()
 	#checkLowestPoint()
 	generatePotentialBoards()
-	findHighestPointOnBoards()
+	generateHeightScore()
 	resolveMovement(chooseBoard())
 
 func getBlocks():
@@ -71,7 +71,7 @@ func generatePotentialBoards():
 				bState.append(temp)
 			#and add dropped nimo to it
 			for block in nimo:
-				bState[block.x][block.y] = 1
+				bState[block.x][block.y] = 2
 			#make new board state
 			var temp = boardStatePre.instance()
 			temp.init(j, i, bState)
@@ -111,18 +111,14 @@ func generatePotentialBoards():
 			newLoc += pivotPoint
 			nimoRef[k] = newLoc
 
-func findHighestPointOnBoards():
+func generateHeightScore():
 	for board in potentialBoards:
-		var highest = 0
-		var hitOne = false
+		var heightScore = 0
 		for y in range(len(board.state[0])):
 			for x in range(len(board.state)):
-				if board.state[x][y] == 1: 
-					hitOne = true
-					break
-			if not hitOne: highest = y
-			else: break
-		board.highestPoint = highest
+				if board.state[x][y] == 2: 
+					heightScore += y
+		board.highestPoint = heightScore
 		#print(board.toString())
 			
 func collisionCheckNimo(nimo):

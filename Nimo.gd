@@ -130,6 +130,11 @@ func submitToSuperNimo():
 		remove_child(block)
 		self.GM.superNimo.addBlock(block)
 
+func kill():
+	for block in blocks:
+		block.queue_free()
+	self.queue_free()
+
 func deleteBlocks():
 	for block in blocks:
 		remove_child(block)
