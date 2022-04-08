@@ -9,9 +9,10 @@ var stopOnEmpty = true
 var delay = false
 var midPlacing = false
 var placingPosition = -1
+var delayTime = 0.4
 
 func init(GameManager):
-	$"SL Holes AI".init(GameManager)
+	$"SL Smart Holes AI".init(GameManager)
 
 func reset():
 	print(inputting)
@@ -72,7 +73,7 @@ func start(stopOnEmpty = true):
 
 func _on_Main_input_compelted():
 	if self.inputting:
-		if delay: yield(get_tree().create_timer(0.2), "timeout")
+		if delay: yield(get_tree().create_timer(delayTime), "timeout")
 		var full = executeNext()
 		if not full and self.stopOnEmpty:
 			if midPlacing:

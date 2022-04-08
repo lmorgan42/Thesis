@@ -9,7 +9,11 @@ var state
 
 #bonus ai specifc variables
 var highestPoint
+var heightList
 var holeCount
+var psuedoHoleCount
+var balance
+var score
 
 func init(position : int, rotation : int, state):
 	self.position = position
@@ -18,10 +22,18 @@ func init(position : int, rotation : int, state):
 
 func toString():
 	var toRe = "p: " + str(position) + " r: " + str(rotation)
+	if heightList != null:
+		toRe += "\nheightList: " + str(heightList)
 	if highestPoint != null:
 		toRe += "\nhighest: " + str(highestPoint)
 	if holeCount != null:
 		toRe += "\nhole count: " + str(holeCount)
+	if psuedoHoleCount != null:
+		toRe += "\npsuedo hole count: " + str(psuedoHoleCount)
+	if balance != null:
+		toRe += "\nbalance: " + str(balance)
+	if score != null:
+		toRe += "\nBoard Score: " + str(score)
 	for y in range(len(state[0])):
 		toRe += "\n["
 		for x in range(len(state)):

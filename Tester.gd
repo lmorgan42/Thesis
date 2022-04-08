@@ -11,6 +11,7 @@ func init(runs):
 
 func recordRun(score, blocks_placed):
 	recordFile.store_string(str(score) + ", " + str(blocks_placed) + "\n")
+	recordFile.flush()
 	runs -= 1
 	if runs > 0:
 		return true

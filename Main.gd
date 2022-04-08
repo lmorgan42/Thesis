@@ -33,7 +33,7 @@ var aicontrolled = true
 var blockInput = false
 var runRandom = true
 var runTest = true
-var testRuns = 1000
+var testRuns = 101
 
 func _ready():
 	
