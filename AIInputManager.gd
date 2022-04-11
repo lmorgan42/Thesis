@@ -9,10 +9,10 @@ var stopOnEmpty = true
 var delay = false
 var midPlacing = false
 var placingPosition = -1
-var delayTime = 0.4
+var delayTime = 0.2
 
 func init(GameManager):
-	$"SL Smart Holes AI".init(GameManager)
+	$"Greedy Points AI".init(GameManager)
 
 func reset():
 	print(inputting)

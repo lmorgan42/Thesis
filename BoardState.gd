@@ -13,6 +13,7 @@ var heightList
 var holeCount
 var psuedoHoleCount
 var balance
+var lineScore
 var score
 
 func init(position : int, rotation : int, state):
@@ -32,11 +33,16 @@ func toString():
 		toRe += "\npsuedo hole count: " + str(psuedoHoleCount)
 	if balance != null:
 		toRe += "\nbalance: " + str(balance)
+	if lineScore != null:
+		toRe += "\nline score: " + str(lineScore)
 	if score != null:
 		toRe += "\nBoard Score: " + str(score)
 	for y in range(len(state[0])):
 		toRe += "\n["
 		for x in range(len(state)):
-			toRe += str(state[x][y]) + " "
+			if len(state[x][y]) == 1: toRe += str(state[x][y][0]) + " "
+			elif len(state[x][y]) == 2: 
+				if state[x][y][0] == 2:toRe += str(state[x][y][1]) + " "
+				else: toRe += str(state[x][y][1]).to_lower() + " "
 		toRe += "]"
 	return toRe
