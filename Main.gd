@@ -29,7 +29,7 @@ var neededScore = 0
 var scoreAddition = 0.5;
 var scoreCapTime = 0.0
 var holdingTime = 5
-var aicontrolled = true
+var aicontrolled = false
 var blockInput = false
 var runRandom = true
 var runTest = true
@@ -85,7 +85,7 @@ func createNimo(nimoDesc):
 		if superNimo.checkCollision(block.coords):
 			self.gameOver()
 	
-	if not runTest:
+	if not (runTest and aicontrolled):
 		ghostNimo = NimoResource.instance()
 		ghostNimo.init(self, $PlaySpace.getOrigin(), nimoDesc)
 		ghostNimo.enableGhostMode(curNimo)
@@ -101,16 +101,16 @@ func _input(event):
 	var invalidInput = false
 	if event.is_action_pressed("move_block_right"):
 		curNimo.move(1,0)
-		if not runTest: ghostNimo.updateGhostPosition(curNimo)
+		if not (runTest and aicontrolled): ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("move_block_left"):
 		curNimo.move(-1,0)
-		if not runTest: ghostNimo.updateGhostPosition(curNimo)
+		if not (runTest and aicontrolled): ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("rotate_block_clockwise"):
 		curNimo.rotate(1)
-		if not runTest: ghostNimo.updateGhostPosition(curNimo)
+		if not (runTest and aicontrolled): ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("rotate_block_counterclockwise"):
 		curNimo.rotate(-1)
-		if not runTest: ghostNimo.updateGhostPosition(curNimo)
+		if not (runTest and aicontrolled): ghostNimo.updateGhostPosition(curNimo)
 	elif event.is_action_pressed("slam_down"):
 		curNimo.slamdown()
 		$DroppingTimer.stop()
@@ -124,10 +124,10 @@ func _input(event):
 		$DroppingTimer.wait_time = DefualtDropSpeed
 	elif event.is_action_pressed("rotate_letters_left"):
 		curNimo.rotateLetters(-1)
-		if not runTest: ghostNimo.rotateLetters(-1)
+		if not (runTest and aicontrolled): ghostNimo.rotateLetters(-1)
 	elif event.is_action_pressed("rotate_letters_right"):
 		curNimo.rotateLetters(1)
-		if not runTest: ghostNimo.rotateLetters(1)
+		if not (runTest and aicontrolled): ghostNimo.rotateLetters(1)
 	else:
 		invalidInput = true
 	if not invalidInput:
@@ -141,7 +141,7 @@ func _on_Timer_timeout():
 func checkClear():
 	blocksPlaced += 1
 	#clear ghost nimo
-	if not runTest: ghostNimo.kill()
+	if not (runTest and aicontrolled): ghostNimo.kill()
 	#add nimo to the super nimo
 	curNimo.submitToSuperNimo()
 	
