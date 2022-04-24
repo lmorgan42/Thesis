@@ -29,10 +29,10 @@ var neededScore = 0
 var scoreAddition = 0.5;
 var scoreCapTime = 0.0
 var holdingTime = 5
-var aicontrolled = false
+var aicontrolled = true
 var blockInput = false
 var runRandom = true
-var runTest = true
+var runTest = false
 var testRuns = 5
 
 func _ready():

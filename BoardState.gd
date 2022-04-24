@@ -13,7 +13,7 @@ var heightList
 var holeCount
 var psuedoHoleCount
 var balance
-var lineScore
+var lineScore = 0.0
 var score
 
 func init(position : int, rotation : int, state):

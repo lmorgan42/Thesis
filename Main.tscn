@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://PlaySpace.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Main.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://SL Holes AI.gd" type="Script" id=10]
 [ext_resource path="res://SL Smart Holes AI.gd" type="Script" id=11]
 [ext_resource path="res://Greedy Points AI.gd" type="Script" id=12]
+[ext_resource path="res://TBH.gd" type="Script" id=13]
 
 [sub_resource type="DynamicFont" id=3]
 size = 35
@@ -51,6 +52,9 @@ script = ExtResource( 10 )
 
 [node name="Greedy Points AI" type="Node" parent="AIInputManager"]
 script = ExtResource( 12 )
+
+[node name="TBH" type="Node" parent="AIInputManager"]
+script = ExtResource( 13 )
 
 [node name="SL Smart Holes AI" type="Node" parent="AIInputManager"]
 script = ExtResource( 11 )
@@ -108,6 +112,7 @@ autostart = true
 [connection signal="finished" from="AIInputManager" to="AIInputManager/SL Holes AI" method="_on_AIInputManager_finished"]
 [connection signal="finished" from="AIInputManager" to="AIInputManager/Greedy Points AI" method="_on_AIInputManager_finished"]
 [connection signal="finished" from="AIInputManager" to="AIInputManager/SL Smart Holes AI" method="_on_AIInputManager_finished"]
+[connection signal="finished" from="AIInputManager" to="AIInputManager/TBH" method="_on_AIInputManager_finished"]
 [connection signal="timeout" from="HoldingTimer" to="." method="_on_HoldingTimer_timeout"]
 [connection signal="timeout" from="DroppingTimer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="ScoreBuildupTimer" to="." method="_on_ScoreBuildupTimer_timeout"]

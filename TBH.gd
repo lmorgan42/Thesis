@@ -16,7 +16,6 @@ const heightMult = 10.0
 const holeMult = 2.0
 const psuedoHoleMult = 0.2
 const balanceMult = 0.2
-const scoreMult = -0.1
 const psuedoHoleCutoff = 3
 
 func init(GameManager):
@@ -26,6 +25,7 @@ func init(GameManager):
 
 func solveForMove():
 	getBlocks()
+	#checkLowestPoint()
 	generatePotentialBoards()
 	generateHeightScore()
 	resolveMovement(chooseBoard())
@@ -33,13 +33,18 @@ func solveForMove():
 func getBlocks():
 	blocks = []
 	for block in GameManager.curNimo.blocks:
-		blocks.append([block.coords, block.letter])
+		blocks.append(block.coords)
+
+func checkForXInBlocks(xValue):
+	for coord in blocks:
+		if coord.x == xValue: return true
+	return false
 
 func generatePotentialBoards():
 	#create block rep to work with
 	var nimoRef = []
 	for block in blocks:
-		nimoRef.append([Vector2(block[0].x, block[0].y), block[1]])
+		nimoRef.append(Vector2(block.x, block.y))
 	var nimoWidth = 1
 	
 	#loop through possible rotations
@@ -48,10 +53,10 @@ func generatePotentialBoards():
 		var leftmost = 20
 		var rightmost = 0
 		for block in nimoRef:
-			if block[0].x < leftmost: leftmost = block[0].x
-			if block[0].x > rightmost: rightmost = block[0].x
+			if block.x < leftmost: leftmost = block.x
+			if block.x > rightmost: rightmost = block.x
 		for k in range(len(nimoRef)):
-			nimoRef[k][0].x -= leftmost
+			nimoRef[k].x -= leftmost
 		#print(nimoRef)
 		nimoWidth = rightmost - leftmost + 1
 		
@@ -60,21 +65,21 @@ func generatePotentialBoards():
 			#create nimo from ref to simulate dropping
 			var nimo = []
 			for block in nimoRef:
-				nimo.append([Vector2(block[0].x, block[0].y), block[1]])
+				nimo.append(Vector2(block.x, block.y))
 			while not collisionCheckNimo(nimo):
 				for k in range(len(nimo)):
-					nimo[k][0].y += 1
+					nimo[k].y += 1
 			#create copy of super nimo
 			var bState = []
 			for elem in GameManager.superNimo.blocks:
 				var temp = []
 				for subElem in elem:
-					if subElem != null: temp.append([1, subElem.letter])
-					else: temp.append([0])
+					if subElem != null: temp.append(1)
+					else: temp.append(0)
 				bState.append(temp)
 			#and add dropped nimo to it
 			for block in nimo:
-				bState[block[0].x][block[0].y] = [2, block[1]]
+				bState[block.x][block.y] = 2
 			#make new board state
 			var temp = boardStatePre.instance()
 			temp.init(j, i, bState)
@@ -82,7 +87,7 @@ func generatePotentialBoards():
 			add_child(temp)
 			#shift nimo over one
 			for k in range(len(nimoRef)):
-				nimoRef[k][0].x += 1
+				nimoRef[k].x += 1
 		
 		#rotate nimoRef
 		#determin pivot point (favour lower and right side)
@@ -90,14 +95,14 @@ func generatePotentialBoards():
 		var minCoord = Vector2(9,19)
 		var maxCoord = Vector2(0,0)
 		for block in nimoRef:
-			if block[0].x > maxCoord.x:
-				maxCoord.x = block[0].x
-			if block[0].x < minCoord.x:
-				minCoord.x = block[0].x
-			if block[0].y > maxCoord.y:
-				maxCoord.y = block[0].y
-			if block[0].y < minCoord.y:
-				minCoord.y = block[0].y
+			if block.x > maxCoord.x:
+				maxCoord.x = block.x
+			if block.x < minCoord.x:
+				minCoord.x = block.x
+			if block.y > maxCoord.y:
+				maxCoord.y = block.y
+			if block.y < minCoord.y:
+				minCoord.y = block.y
 		#find middle of bounding box
 		#TODO add support for 0.5,0.5 coordinates
 		var pivotPoint = Vector2(0,0)
@@ -107,12 +112,12 @@ func generatePotentialBoards():
 		pivotPoint.y = width - round(width/2.0) + minCoord.y
 		#for each block, transpose around that point
 		for k in range(len(nimoRef)):
-			var adjustedCoords = (nimoRef[k][0] - pivotPoint)
+			var adjustedCoords = (nimoRef[k] - pivotPoint)
 			var newLoc = Vector2(0,0)
 			newLoc.x = -adjustedCoords.y
 			newLoc.y = adjustedCoords.x
 			newLoc += pivotPoint
-			nimoRef[k][0] = newLoc
+			nimoRef[k] = newLoc
 
 func generateHeightScore():
 	for board in potentialBoards:
@@ -120,7 +125,6 @@ func generateHeightScore():
 		var holeCount = 0
 		var psuedoHoleCount = 0
 		var heightList = []
-		var clearList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 		heightList.resize(10)
 		#move from top to bottom of each column, when hitting the top, add that to height list
 		#	then count each hole under the top in that column
@@ -129,14 +133,12 @@ func generateHeightScore():
 		for x in range(len(board.state)):
 			hitTop = false
 			for y in range(len(board.state[x])):
-				if board.state[x][y][0] == 2:
+				if board.state[x][y] == 2:
 					heightScore += y
-				elif board.state[x][y][0] == 0 and y in clearList:
-					clearList.erase(y)
-				if not hitTop and board.state[x][y][0] > 0: 
+				if not hitTop and board.state[x][y] > 0: 
 					hitTop = true
 					heightList[x] = y
-				elif hitTop and board.state[x][y][0] == 0:
+				elif hitTop and board.state[x][y] == 0:
 					holeCount += 1
 				elif not hitTop and y == 19:
 					heightList[x] = 20
@@ -152,18 +154,6 @@ func generateHeightScore():
 		for h in heightList:
 			stdev += pow(h - avgH, 2)
 		stdev = sqrt(float(stdev) / len(heightList))
-		#calculate score of any clearing lines
-		for height in clearList:
-			var toCheck = ""
-			for x in range(len(board.state)):
-				toCheck += board.state[x][height][1]
-			var subString = GameManager.checkForWords(toCheck)
-			if subString.y != -1:
-				var foundWord = ""
-				if subString.z == -1: foundWord = GameManager.invertString(toCheck.substr(subString.x, subString.y))
-				else: foundWord = toCheck.substr(subString.x, subString.y)
-				board.lineScore += GameManager.calcWordScore(foundWord)
-		board.lineScore *= len(clearList)
 		board.balance = stdev
 		board.highestPoint = heightScore
 		board.heightList = heightList
@@ -174,8 +164,8 @@ func generateHeightScore():
 			
 func collisionCheckNimo(nimo):
 	for block in nimo:
-		if block[0].y == 19: return true
-		if GameManager.superNimo.checkCollision(Vector2(block[0].x, block[0].y + 1)): return true
+		if block.y == 19: return true
+		if GameManager.superNimo.checkCollision(Vector2(block.x, block.y + 1)): return true
 	return false
 
 func chooseBoard():
@@ -185,12 +175,55 @@ func chooseBoard():
 		if potentialBoards[i].score < bestScore:
 			bestScore = potentialBoards[i].score
 			chosen = i
-	print("----------------- Chosen -----------------")
-	print(potentialBoards[chosen].toString())
+	#print("----------------- Chosen -----------------")
+	#print(potentialBoards[chosen].toString())
 	return chosen
 
 func calcBoardScore(board):
-	return (board.highestPoint * heightMult) + (board.holeCount * holeMult) + (board.psuedoHoleCount * psuedoHoleMult) + (board.balance * balanceMult) + (board.lineScore * scoreMult)
+	return (board.highestPoint * heightMult) + (board.holeCount * holeMult) + (board.psuedoHoleCount * psuedoHoleMult) + (board.balance * balanceMult)
+
+func generateBlockBottom():
+	blockBottom = []
+	#find range of x values
+	var lowestX = 9
+	var highestX = 0
+	for coord in blocks:
+		if coord.x < lowestX: lowestX = coord.x
+		if coord.x > highestX: highestX = coord.x
+	#use the info to prepare for movement and coord translation
+	movementTracker = -1 * lowestX
+	for i in range(highestX - lowestX + 1):
+		blockBottom.append(0)
+	#find lowest block for each x value
+	for coord in blocks:
+		var adjusted = lowestX - coord.x 
+		if coord.y > blockBottom[adjusted]: blockBottom[adjusted] = coord.y
+
+func checkLowestPoint():
+	#fill out highestPoints
+	highestPoints = []
+	for i in range(10):
+		var curHeight = 0
+		while not GameManager.superNimo.checkCollision(Vector2(i,curHeight)):
+			curHeight += 1
+			if curHeight > 19:
+				curHeight = 20
+				break
+		highestPoints.append(curHeight - 1)
+	generateBlockBottom()
+	#find furthest down block could move in each position and save best
+	var leftXPos = 0
+	var bestDistance = 0
+	for i in range(10 - len(blockBottom) + 1):
+		var bestSubDistance = 20
+		for j in range(len(blockBottom)):
+			var distance = highestPoints[i + j] - blockBottom[j]
+			#print("distance: " + str(distance))
+			if distance < bestSubDistance: bestSubDistance = distance
+		if bestSubDistance > bestDistance: 
+			bestDistance = bestSubDistance
+			leftXPos = i
+	movementTracker += leftXPos
 
 func resolveMovement(boardIndex):
 	var board = potentialBoards[boardIndex]
