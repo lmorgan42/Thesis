@@ -4,6 +4,8 @@ extends Node
 var position
 #encoded as number of clockwise rotaitons from default
 var rotation
+#encoded as number of right rotations from default
+var letterRotation
 #2d array (akin to super nimo) of potential board state
 var state
 
@@ -16,13 +18,14 @@ var balance
 var lineScore = 0.0
 var score
 
-func init(position : int, rotation : int, state):
+func init(position : int, rotation : int, letterRotation : int, state):
 	self.position = position
 	self.rotation = rotation
+	self.letterRotation = letterRotation
 	self.state = state
 
 func toString():
-	var toRe = "p: " + str(position) + " r: " + str(rotation)
+	var toRe = "p: " + str(position) + " r: " + str(rotation) + " lr: " + str(letterRotation)
 	if heightList != null:
 		toRe += "\nheightList: " + str(heightList)
 	if highestPoint != null:

@@ -12,7 +12,7 @@ var placingPosition = -1
 var delayTime = 0.2
 
 func init(GameManager):
-	$"SL Smart Holes AI".init(GameManager)
+	$"Letter Rotate H".init(GameManager)
 
 func reset():
 	print(inputting)
@@ -35,12 +35,13 @@ func executeNext():
 func addCommand(command):
 	commandQueue.push_back(command)
 
-func placeBlock(position, rotation):
+func placeBlock(position, rotation, letterRotation):
 	#print("placing block")
 	placingPosition = position
 	midPlacing = true
-	if rotation > 0:
+	if rotation > 0 or letterRotation > 0:
 		for i in range(rotation): self.addCommand("rotate_block_clockwise")
+		for i in range(letterRotation): self.addCommand("rotate_letters_right")
 		self.start()
 	else:
 		placeBlockFinish()
