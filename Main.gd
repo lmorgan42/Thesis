@@ -32,8 +32,8 @@ var holdingTime = 5
 var aicontrolled = true
 var blockInput = false
 var runRandom = true
-var runTest = false
-var testRuns = 5
+var runTest = true
+var testRuns = 20
 
 func _ready():
 	
@@ -61,20 +61,22 @@ func _ready():
 
 func resetGame():
 	print("resetting")
-	superNimo.reset()
-	score = 0
-	blocksPlaced = 0
-	updateScore()
-	neededScore = 0
-	blockInput = false
-	$DroppingTimer.stop()
-	$HoldingTimer.stop()
-	$ScoreBuildupTimer.stop()
-	if ghostNimo != null: ghostNimo.kill()
-	curNimo.kill()
-	$ScoreBuildupTimer.start()
-	createNimo(blockMaker.getNextNimo())
-	if aicontrolled: $AIInputManager.reset()
+	get_tree().change_scene("res://Main.tscn")
+#	if aicontrolled: $AIInputManager.reset()
+#	superNimo.reset()
+#	score = 0
+#	blocksPlaced = 0
+#	updateScore()
+#	neededScore = 0
+#	blockInput = false
+#	$DroppingTimer.stop()
+#	$HoldingTimer.stop()
+#	$ScoreBuildupTimer.stop()
+#	if ghostNimo != null: ghostNimo.kill()
+#	curNimo.kill()
+#	$ScoreBuildupTimer.start()
+#	createNimo(blockMaker.getNextNimo())
+#	if aicontrolled: $AIInputManager.init(self)
 
 func createNimo(nimoDesc):
 	$DroppingTimer.stop()

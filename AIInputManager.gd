@@ -20,7 +20,10 @@ func reset():
 		inputting = false
 		commandQueue.clear()
 	midPlacing = false
-	emit_signal("finished")
+	$DelayTimer.stop()
+	$DelayTimer.emit_signal("timeout")
+	
+	#emit_signal("finished")
 
 func executeNext():
 	if commandQueue.empty(): 
@@ -74,7 +77,9 @@ func start(stopOnEmpty = true):
 
 func _on_Main_input_compelted():
 	if self.inputting:
-		if delay: yield(get_tree().create_timer(delayTime), "timeout")
+		if delay: 
+			$DelayTimer.start(delayTime)
+			yield($DelayTimer, "timeout")
 		var full = executeNext()
 		if not full and self.stopOnEmpty:
 			if midPlacing:

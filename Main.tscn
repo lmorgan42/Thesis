@@ -39,6 +39,9 @@ DefualtHoldSpeed = 30
 [node name="AIInputManager" type="Node" parent="."]
 script = ExtResource( 4 )
 
+[node name="DelayTimer" type="Timer" parent="AIInputManager"]
+one_shot = true
+
 [node name="Random agent AI" type="Node" parent="AIInputManager"]
 script = ExtResource( 5 )
 
@@ -97,9 +100,6 @@ margin_right = 509.588
 margin_bottom = 139.798
 custom_fonts/font = SubResource( 2 )
 text = "5"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HoldingTimer" type="Timer" parent="."]
 
@@ -115,8 +115,8 @@ autostart = true
 [connection signal="finished" from="AIInputManager" to="AIInputManager/Smart Lowest point AI" method="_on_AIInputManager_finished"]
 [connection signal="finished" from="AIInputManager" to="AIInputManager/SL Holes AI" method="_on_AIInputManager_finished"]
 [connection signal="finished" from="AIInputManager" to="AIInputManager/Greedy Points AI" method="_on_AIInputManager_finished"]
-[connection signal="finished" from="AIInputManager" to="AIInputManager/SL Smart Holes AI" method="_on_AIInputManager_finished"]
 [connection signal="finished" from="AIInputManager" to="AIInputManager/TBH" method="_on_AIInputManager_finished"]
+[connection signal="finished" from="AIInputManager" to="AIInputManager/SL Smart Holes AI" method="_on_AIInputManager_finished"]
 [connection signal="finished" from="AIInputManager" to="AIInputManager/Letter Rotate H" method="_on_AIInputManager_finished"]
 [connection signal="timeout" from="HoldingTimer" to="." method="_on_HoldingTimer_timeout"]
 [connection signal="timeout" from="DroppingTimer" to="." method="_on_Timer_timeout"]

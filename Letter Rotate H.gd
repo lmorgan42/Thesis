@@ -221,7 +221,9 @@ func resolveMovement(boardIndex):
 #	for i in range(board.position):
 #		get_parent().addCommand("move_block_right")
 #	get_parent().addCommand("slam_down")
-	potentialBoards = []
+	for lilboard in potentialBoards:
+		lilboard.queue_free()
+	potentialBoards.clear()
 #	get_parent().start()
 
 func saveToLogFile(text):

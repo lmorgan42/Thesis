@@ -48,7 +48,10 @@ Temporary Items
 
 # Animation Scratch work
 Animation/
-.import\
+.import/
 
 # Test data output
 Testing/
+
+# Executables
+Runnables/

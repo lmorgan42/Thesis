@@ -82,7 +82,7 @@ func generatePotentialBoards():
 				bState[block.x][block.y] = 2
 			#make new board state
 			var temp = boardStatePre.instance()
-			temp.init(j, i, bState)
+			temp.init(j, i, 0, bState)
 			potentialBoards.append(temp)
 			add_child(temp)
 			#shift nimo over one
@@ -227,7 +227,7 @@ func checkLowestPoint():
 
 func resolveMovement(boardIndex):
 	var board = potentialBoards[boardIndex]
-	get_parent().placeBlock(board.position, board.rotation)
+	get_parent().placeBlock(board.position, board.rotation, 0)
 #	for i in range(board.rotation):
 #		get_parent().addCommand("rotate_block_clockwise")
 #	for i in range(6):
@@ -235,7 +235,9 @@ func resolveMovement(boardIndex):
 #	for i in range(board.position):
 #		get_parent().addCommand("move_block_right")
 #	get_parent().addCommand("slam_down")
-	potentialBoards = []
+	for lilboard in potentialBoards:
+		lilboard.queue_free()
+	potentialBoards.clear()
 #	get_parent().start()
 
 func saveToLogFile(text):
